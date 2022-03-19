@@ -88,28 +88,36 @@ document.getElementById("btnTest").onclick = () => {
 
 // baii 2 tinh tien dien
 
-const Calculate = (soKw) => {
-  let money;
-  if (soKw >= 0 && soKw <= 50) {
-    return (money = 500);
-  } else if (soKw > 50 && soKw <= 100) {
-    return (money = 650);
-  } else if (soKw > 100 && soKw <= 200) {
-    return (money = 850);
-  } else if (soKw > 200 && soKw <= 350) {
-    return (money = 1100);
-  } else {
-    return (money = 1300);
-  }
-};
+const KW = 500; // tức là 0 tới 50
+const KW_50 = 650; // tức là 51 tới 100
+const KW_100 = 850; // tức là 101 tới 200
+const KW_200 = 1100; // tức là 201 tới 350
+const KW_PLUS = 1300; // tức là từ 351 trở đi
+const BILL_50 = 50 * KW; // Tổng tiền khi 50
+const BILL_100 = BILL_50 + 50 * KW_50; // Tổng tiền khi 100
+const BILL_200 = BILL_100 + 100 * KW_100; // Tổng tiền khi 200
+const BILL_PLUS = BILL_200 + 150 * KW_200; // Tổng tiền khi 350
+//format tien te
+const formatVND = new Intl.NumberFormat("vn-VN").format;
 
-const result_1 = document.getElementById("result-1");
+//tinh tien
+const tienDien = (kw) => {
+  let result;
+  if (kw > 0 && kw < 51) result = kw * KW;
+  else if (kw > 50 && kw < 101) result = (kw - 50) * KW_50 + BILL_50;
+  else if (kw > 100 && kw < 201) result = (kw - 100) * KW_100 + BILL_100;
+  else if (kw > 200 && kw < 351) result = (kw - 200) * KW_200 + BILL_200;
+  else if (kw > 350) result = (kw - 350) * KW_PLUS + BILL_PLUS;
+  else result = "đơn lỗi. Vui lòng nhập đúng số kw đã xài nhé!!!";
+  return result;
+};
+const test = document.getElementById("result-1");
 
 document.getElementById("btnCalculate").onclick = () => {
   let soKw = document.getElementById("soKw").value * 1;
   let name = document.getElementById("name").value;
 
-  let total = soKw * Calculate(soKw);
-
-  result_1.innerHTML = `Tong tien dien cua ${name} la: ${total} dong`;
+  test.innerHTML = `Tong tien dien cua ${name} la: ${formatVND(
+    tienDien(soKw)
+  )}`;
 };
